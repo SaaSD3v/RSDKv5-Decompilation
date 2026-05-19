@@ -2299,7 +2299,7 @@ void RSDK::AddDevMenuCharacter(const char *playerName, int32 id)
         return;
     }
 
-    StrCopy(modSettings.players[modSettings.playerCount].name, playerName);
+    strcpy(modSettings.players[modSettings.playerCount].name, playerName);
     modSettings.players[modSettings.playerCount].id = id;
     modSettings.playerCount++;
 }

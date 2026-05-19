@@ -2066,9 +2066,8 @@ void RSDK::DevMenu_ModsMenu()
             CloseDevMenu();
     }
 }
-#endif
 
-#if RETRO_USE_MOD_LOADER && (RETRO_REV0U || RETRO_MOD_LOADER_VER >= 3)
+#if RETRO_REV0U || RETRO_MOD_LOADER_VER >= 3
 void RSDK::DevMenu_PlayerSelectMenu()
 {
     uint32 selectionColors[] = {
@@ -2174,4 +2173,5 @@ void RSDK::DevMenu_PlayerSelectMenu()
         devMenu.selection     = 2;
     }
 }
+#endif
 #endif
