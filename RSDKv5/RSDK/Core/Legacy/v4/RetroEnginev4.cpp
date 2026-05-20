@@ -581,8 +581,8 @@ void RSDK::Legacy::v4::LoadXMLStages(const tinyxml2::XMLElement *gameElement)
                 if (idAttr)
                     stgID = idAttr->Value();
 
-                listData.emplace(listData.begin() + list->sceneOffsetEnd);
-                SceneListEntry *scene = &listData[list->sceneOffsetEnd];
+                listData.emplace(listData.begin() + list->sceneOffsetStart + list->sceneCount);
+                SceneListEntry *scene = &listData[list->sceneOffsetStart + list->sceneCount];
 
                 sprintf_s(scene->name, sizeof(scene->name), "%s", stgName);
                 GEN_HASH_MD5(scene->name, scene->hash);
@@ -599,5 +599,4 @@ void RSDK::Legacy::v4::LoadXMLStages(const tinyxml2::XMLElement *gameElement)
     }
     sceneInfo.listData = listData.data();
 }
-
 #endif
