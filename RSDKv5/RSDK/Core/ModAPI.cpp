@@ -1679,7 +1679,7 @@ void SuperInternal(RSDK::ObjectClass *super, RSDK::ModSuper callback, void *data
 #if RETRO_REV0U
         case SUPER_STATICLOAD:
             if (super->staticLoad)
-                super->staticLoad(data);
+                super->staticLoad((Object *)data);
             break;
 #endif
 
