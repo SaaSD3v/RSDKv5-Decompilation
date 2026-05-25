@@ -233,7 +233,7 @@ void RSDK::MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scal
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void RSDK::MatrixRotateX(Matrix *matrix, int16 rotationX)
+void RSDK::MatrixRotateX(Matrix *matrix, int32 rotationX)
 {
     int32 sine   = sin1024LookupTable[rotationX & 0x3FF] >> 2;
     int32 cosine = cos1024LookupTable[rotationX & 0x3FF] >> 2;
@@ -255,7 +255,7 @@ void RSDK::MatrixRotateX(Matrix *matrix, int16 rotationX)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void RSDK::MatrixRotateY(Matrix *matrix, int16 rotationY)
+void RSDK::MatrixRotateY(Matrix *matrix, int32 rotationY)
 {
     int32 sine           = sin1024LookupTable[rotationY & 0x3FF] >> 2;
     int32 cosine         = cos1024LookupTable[rotationY & 0x3FF] >> 2;
@@ -276,7 +276,7 @@ void RSDK::MatrixRotateY(Matrix *matrix, int16 rotationY)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void RSDK::MatrixRotateZ(Matrix *matrix, int16 rotationZ)
+void RSDK::MatrixRotateZ(Matrix *matrix, int32 rotationZ)
 {
     int32 sine           = sin1024LookupTable[rotationZ & 0x3FF] >> 2;
     int32 cosine         = cos1024LookupTable[rotationZ & 0x3FF] >> 2;
@@ -297,7 +297,7 @@ void RSDK::MatrixRotateZ(Matrix *matrix, int16 rotationZ)
     matrix->values[2][3] = 0;
     matrix->values[3][3] = 0x100;
 }
-void RSDK::MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
+void RSDK::MatrixRotateXYZ(Matrix *matrix, int32 rotationX, int32 rotationY, int32 rotationZ)
 {
     int32 sinX = sin1024LookupTable[rotationX & 0x3FF] >> 2;
     int32 cosX = cos1024LookupTable[rotationX & 0x3FF] >> 2;

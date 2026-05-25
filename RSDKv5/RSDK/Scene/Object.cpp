@@ -980,7 +980,7 @@ void RSDK::ProcessObjectDrawLists()
                                 if (info->collision & 8)
                                     sh -= TO_FIXED(1);
 
-                                DrawRectangle(x + w, sy, TO_FIXED(1), sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
+                                DrawRectangle(x + w - 1, sy, TO_FIXED(1), sh, 0xFFFF00, 0xC0, INK_ALPHA, false);
                             }
                             break;
 

@@ -84,8 +84,8 @@ struct Camera {
     uint32 target;
     int32 adjustY;
     uint8 enabled;
-    uint8 unknown1;
-    uint8 unknown2;
+    uint8 cameraLockedY;
+    uint8 cameraShift;
     uint8 style;
 };
 
@@ -139,12 +139,9 @@ extern Camera *currentCamera;
 
 extern int32 xScrollOffset;
 extern int32 yScrollOffset;
-extern int32 cameraShift;
-extern int32 cameraLockedY;
 extern int32 cameraShakeX;
 extern int32 cameraShakeY;
 extern int32 cameraLag;
-extern int32 cameraLagStyle;
 
 extern int32 curXBoundary1;
 extern int32 newXBoundary1;

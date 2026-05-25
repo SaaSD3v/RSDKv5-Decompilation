@@ -138,9 +138,9 @@ inline void StopAllSfx()
 }
 #endif
 
-void SetChannelAttributes(uint8 channel, float volume, float panning, float speed);
+void SetChannelAttributes(int32 channel, float volume, float panning, float speed);
 
-inline void StopChannel(uint32 channel)
+inline void StopChannel(int32 channel)
 {
     if (channel < CHANNEL_COUNT) {
         if (channels[channel].state != CHANNEL_LOADING_STREAM)
@@ -148,7 +148,7 @@ inline void StopChannel(uint32 channel)
     }
 }
 
-inline void PauseChannel(uint32 channel)
+inline void PauseChannel(int32 channel)
 {
     if (channel < CHANNEL_COUNT) {
         if (channels[channel].state != CHANNEL_LOADING_STREAM)
@@ -156,7 +156,7 @@ inline void PauseChannel(uint32 channel)
     }
 }
 
-inline void ResumeChannel(uint32 channel)
+inline void ResumeChannel(int32 channel)
 {
     if (channel < CHANNEL_COUNT) {
         if (channels[channel].state != CHANNEL_LOADING_STREAM)
@@ -183,7 +183,7 @@ inline bool32 SfxPlaying(uint16 sfx)
     return false;
 }
 
-inline bool32 ChannelActive(uint32 channel)
+inline bool32 ChannelActive(int32 channel)
 {
     if (channel >= CHANNEL_COUNT)
         return false;
@@ -191,7 +191,7 @@ inline bool32 ChannelActive(uint32 channel)
         return (channels[channel].state & 0x3F) != CHANNEL_IDLE;
 }
 
-uint32 GetChannelPos(uint32 channel);
+uint32 GetChannelPos(int32 channel);
 double GetVideoStreamPos();
 
 void ClearStageSfx();

@@ -7,12 +7,7 @@ using namespace RSDK;
 #endif
 
 #if RETRO_REV0U
-// Not sure why its 8.0 in v5U, it's 4.0 in v5 and v4, the "fix" is here since 8.0 causes issues with chibi due to his lil hitbox
-#if RETRO_USE_ORIGINAL_CODE
 #define COLLISION_OFFSET (TO_FIXED(8))
-#else
-#define COLLISION_OFFSET (TO_FIXED(4))
-#endif
 #else
 #define COLLISION_OFFSET (TO_FIXED(4))
 #endif
@@ -33,12 +28,7 @@ Entity *RSDK::collisionEntity = NULL;
 CollisionSensor RSDK::sensors[6];
 
 #if RETRO_REV0U
-#if RETRO_USE_ORIGINAL_CODE
-// not sure why it's 24 here... it was 14 in all prev RSDK versions, maybe a mistake???
 int32 RSDK::collisionMinimumDistance = TO_FIXED(24);
-#else
-int32 RSDK::collisionMinimumDistance = TO_FIXED(14);
-#endif
 
 uint8 RSDK::lowCollisionTolerance  = 8;
 uint8 RSDK::highCollisionTolerance = 14;
@@ -283,22 +273,39 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
 
     int32 collideX = otherEntity->position.x;
     int32 collideY = otherEntity->position.y;
+#if RETRO_REV0U
+    int32 store;
+#endif
 
     if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+#if RETRO_REV0U
+        store             = -thisHitbox->left;
+#else
         int32 store       = -thisHitbox->left;
+#endif
         thisHitbox->left  = -thisHitbox->right;
         thisHitbox->right = store;
-
+#if RETRO_REV0U       
+    }
+    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
+#endif
         store              = -otherHitbox->left;
         otherHitbox->left  = -otherHitbox->right;
         otherHitbox->right = store;
     }
 
     if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+#if RETRO_REV0U
+        store              = -thisHitbox->top;
+#else
         int32 store        = -thisHitbox->top;
+#endif
         thisHitbox->top    = -thisHitbox->bottom;
         thisHitbox->bottom = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
+#endif
         store               = -otherHitbox->top;
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
@@ -320,7 +327,7 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
         }
     }
     else {
-        if (otherIX + otherHitbox->left < thisIX + thisHitbox->right && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom
+        if (otherIX + otherHitbox->left <= thisIX + thisHitbox->right && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom
             && thisIY + thisHitbox->bottom > otherIY + otherHitbox->top) {
             collisionSideH = C_RIGHT;
             collideX       = thisEntity->position.x + TO_FIXED(thisHitbox->right - otherHitbox->left);
@@ -340,7 +347,11 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
         }
     }
     else {
+#if RETRO_REV0U
+        if (otherIY + otherHitbox->top <= thisIY + thisHitbox->bottom && thisIX + thisHitbox->left < otherIX + otherHitbox->right) {
+#else
         if (otherIY + otherHitbox->top < thisIY + thisHitbox->bottom && thisIX + thisHitbox->left < otherIX + otherHitbox->right) {
+#endif
             if (otherIX + otherHitbox->left < thisIX + thisHitbox->right) {
                 collisionSideV = C_BOTTOM;
                 collideY       = thisEntity->position.y + TO_FIXED(thisHitbox->bottom - otherHitbox->top);
@@ -352,20 +363,34 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
     otherHitbox->right++;
 
     if ((thisEntity->direction & FLIP_X) == FLIP_X) {
+#if RETRO_REV0U
+        store             = -thisHitbox->left;
+#else
         int32 store       = -thisHitbox->left;
+#endif
         thisHitbox->left  = -thisHitbox->right;
         thisHitbox->right = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
+#endif
         store              = -otherHitbox->left;
         otherHitbox->left  = -otherHitbox->right;
         otherHitbox->right = store;
     }
 
     if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
+#if RETRO_REV0U
+        store              = -thisHitbox->top;
+#else
         int32 store        = -thisHitbox->top;
+#endif
         thisHitbox->top    = -thisHitbox->bottom;
         thisHitbox->bottom = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
+#endif
         store               = -otherHitbox->top;
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
@@ -425,7 +450,7 @@ uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Enti
                 break;
 
             case C_RIGHT:
-                otherEntity->position.x = collideX;
+                otherEntity->position.x = collideX | 0xFFFF;
 
                 velX = otherEntity->velocity.x;
                 if (otherEntity->onGround) {
@@ -498,16 +523,23 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
         store             = -thisHitbox->left;
         thisHitbox->left  = -thisHitbox->right;
         thisHitbox->right = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
+#endif
         store              = -otherHitbox->left;
         otherHitbox->left  = -otherHitbox->right;
         otherHitbox->right = store;
     }
+
     if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
         store              = -thisHitbox->top;
         thisHitbox->top    = -thisHitbox->bottom;
         thisHitbox->bottom = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
+#endif
         store               = -otherHitbox->top;
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
@@ -521,12 +553,14 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
     int32 otherMoveY = FROM_FIXED(otherEntity->position.y - otherEntity->velocity.y);
 
 #if RETRO_REV0U
-    if (otherEntity->tileCollisions == TILECOLLISION_UP) {
-        if (otherIY - otherHitbox->bottom >= thisIY + thisHitbox->top && otherMoveY - otherHitbox->bottom <= thisIY + thisHitbox->bottom
-            && thisIX + thisHitbox->left < otherIX + otherHitbox->right && thisIX + thisHitbox->right > otherIX + otherHitbox->left
+    if (otherEntity->tileCollisions != TILECOLLISION_DOWN) {	
+        if (otherMoveY - otherHitbox->bottom >= thisIY + -thisHitbox->bottom
+            && otherIY - otherHitbox->bottom <= thisIY + -thisHitbox->top
+            && thisIX + thisHitbox->left < otherIX + otherHitbox->right
+            && thisIX + thisHitbox->right > otherIX + otherHitbox->left
             && otherEntity->velocity.y <= 0) {
 
-            otherEntity->position.y = thisEntity->position.y + TO_FIXED(thisHitbox->bottom + otherHitbox->bottom);
+            otherEntity->position.y = thisEntity->position.y + TO_FIXED(-thisHitbox->top + otherHitbox->bottom);
 
             if (setValues) {
                 otherEntity->velocity.y = 0;
@@ -569,7 +603,10 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
         store             = -thisHitbox->left;
         thisHitbox->left  = -thisHitbox->right;
         thisHitbox->right = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
+#endif
         store              = -otherHitbox->left;
         otherHitbox->left  = -otherHitbox->right;
         otherHitbox->right = store;
@@ -579,7 +616,10 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
         store              = -thisHitbox->top;
         thisHitbox->top    = -thisHitbox->bottom;
         thisHitbox->bottom = store;
-
+#if RETRO_REV0U
+    }
+    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
+#endif
         store               = -otherHitbox->top;
         otherHitbox->top    = -otherHitbox->bottom;
         otherHitbox->bottom = store;
@@ -2182,25 +2222,21 @@ void RSDK::FindFloorPosition(CollisionSensor *sensor)
             int32 colX       = posX - layer->position.x;
             int32 colY       = posY - layer->position.y;
             int32 cy         = (colY & -TILE_SIZE) - TILE_SIZE;
+            int32 my         = startY - layer->position.y;
             if (colX >= 0 && colX < TILE_SIZE * layer->xsize) {
                 for (int32 i = 0; i < 3; ++i) {
                     if (cy >= 0 && cy < TILE_SIZE * layer->ysize) {
                         uint16 tile = layer->layout[(colX / TILE_SIZE) + ((cy / TILE_SIZE) << layer->widthShift)];
-
-                        if (tile < 0xFFFF && tile & solid) {
+                        if (tile != 0xFFFF && tile & solid) {
                             int32 mask      = collisionMasks[collisionEntity->collisionPlane][tile & 0xFFF].floorMasks[colX & 0xF];
                             int32 ty        = cy + mask;
                             int32 tileAngle = tileInfo[collisionEntity->collisionPlane][tile & 0xFFF].floorAngle;
 
-                            if (mask < 0xFF) {
-                                if (!sensor->collided || startY >= ty) {
+                            if (mask != 0xFF) {
+                                if (!sensor->collided || my >= ty) {
                                     if (abs(colY - ty) <= collisionTolerance) {
 #if RETRO_REV0U
-#if !RETRO_USE_ORIGINAL_CODE
-                                        if (abs(sensor->angle - tileAngle) <= TILE_SIZE * 2 // * 3 causes some issues in certain tiles
-#else
                                         if (abs(sensor->angle - tileAngle) <= TILE_SIZE * 3
-#endif
                                             || abs(sensor->angle - tileAngle + 0x100) <= floorAngleTolerance
                                             || abs(sensor->angle - tileAngle - 0x100) <= floorAngleTolerance) {
 #else
@@ -2210,7 +2246,7 @@ void RSDK::FindFloorPosition(CollisionSensor *sensor)
                                             sensor->collided   = true;
                                             sensor->angle      = tileAngle;
                                             sensor->position.y = TO_FIXED(ty + layer->position.y);
-                                            startY             = ty;
+                                            my                 = ty;
                                             i                  = 3;
                                         }
                                     }
@@ -2218,13 +2254,13 @@ void RSDK::FindFloorPosition(CollisionSensor *sensor)
                             }
                         }
                     }
-
                     cy += TILE_SIZE;
                 }
             }
 
-            posX = layer->position.x + colX;
-            posY = layer->position.y + colY;
+            posX   = layer->position.x + colX;
+            posY   = layer->position.y + colY;
+            startY = layer->position.y + my;
         }
     }
 }

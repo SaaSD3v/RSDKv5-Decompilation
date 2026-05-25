@@ -2278,7 +2278,7 @@ void RSDK::LoadPaletteLegacy(uint8 bankID, const char *filename, int32 startDstI
 
 // Audio
 
-void RSDK::GetChannelAttributes(uint8 channel, float *volume, float *panning, float *speed)
+void RSDK::GetChannelAttributes(int32 channel, float *volume, float *panning, float *speed)
 {
     if (channel < CHANNEL_COUNT) {
         if (volume)

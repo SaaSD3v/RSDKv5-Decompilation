@@ -161,7 +161,7 @@ void RSDK::Legacy::v4::MatrixRotateZ(Matrix *matrix, int32 rotationZ)
     matrix->values[3][2] = 0;
     matrix->values[3][3] = 0x100;
 }
-void RSDK::Legacy::v4::MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ)
+void RSDK::Legacy::v4::MatrixRotateXYZ(Matrix *matrix, int32 rotationX, int32 rotationY, int32 rotationZ)
 {
     int32 sinX = sin512LookupTable[rotationX & 0x1FF] >> 1;
     int32 cosX = cos512LookupTable[rotationX & 0x1FF] >> 1;

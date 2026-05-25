@@ -514,7 +514,7 @@ void SetGameTitle(const char *name);
 void LoadPaletteLegacy(uint8 bankID, const char *filename, int32 startDstIndex, int32 startSrcIndex, int32 endSrcIndex);
 
 // Audio
-void GetChannelAttributes(uint8 channel, float *volume, float *panning, float *speed);
+void GetChannelAttributes(int32 channel, float *volume, float *panning, float *speed);
 
 // Dev Menu Characters
 void AddDevMenuCharacter(const char *playerName, int32 id);

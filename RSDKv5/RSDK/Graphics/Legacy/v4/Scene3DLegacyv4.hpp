@@ -24,7 +24,7 @@ void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ);
 void MatrixRotateX(Matrix *matrix, int32 rotationX);
 void MatrixRotateY(Matrix *matrix, int32 rotationY);
 void MatrixRotateZ(Matrix *matrix, int32 rotationZ);
-void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ);
+void MatrixRotateXYZ(Matrix *matrix, int32 rotationX, int32 rotationY, int32 rotationZ);
 void MatrixInverse(Matrix *matrix);
 void TransformVertexBuffer();
 void TransformVertices(Matrix *matrix, int32 startIndex, int32 endIndex);

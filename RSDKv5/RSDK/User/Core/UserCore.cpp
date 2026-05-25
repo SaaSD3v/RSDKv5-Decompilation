@@ -699,7 +699,7 @@ void RSDK::SaveSettingsINI(bool32 writeToFile)
         }
 
         for (int32 i = 0; i < gamePadCount; ++i) {
-            WriteText(file, "\n[Keyboard Map %d]\n", i + 1);
+            WriteText(file, "\n[GamePad Map %d]\n", i + 1);
             WriteText(file, "name=%s\n", gamePadMappings[i].name);
             WriteText(file, "type=0x%x\n", gamePadMappings[i].type);
             WriteText(file, "vendorID=0x%x\n", gamePadMappings[i].vendorID);

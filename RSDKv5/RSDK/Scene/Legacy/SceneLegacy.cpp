@@ -9,12 +9,9 @@ RSDK::Legacy::Camera *RSDK::Legacy::currentCamera = NULL;
 
 int32 RSDK::Legacy::xScrollOffset  = 0;
 int32 RSDK::Legacy::yScrollOffset  = 0;
-int32 RSDK::Legacy::cameraShift    = 0;
-int32 RSDK::Legacy::cameraLockedY  = 0;
 int32 RSDK::Legacy::cameraShakeX   = 0;
 int32 RSDK::Legacy::cameraShakeY   = 0;
 int32 RSDK::Legacy::cameraLag      = 0;
-int32 RSDK::Legacy::cameraLagStyle = 0;
 
 int32 RSDK::Legacy::curXBoundary1 = 0;
 int32 RSDK::Legacy::newXBoundary1 = 0;

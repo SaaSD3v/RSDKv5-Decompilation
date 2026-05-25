@@ -1917,7 +1917,7 @@ void RSDK::DevMenu_DebugOptionsMenu()
     else {
         if (confirm) {
             devMenu.state     = DevMenu_OptionsMenu;
-            devMenu.selection = 4;
+            devMenu.selection = 3;
         }
     }
 
@@ -1929,7 +1929,7 @@ void RSDK::DevMenu_DebugOptionsMenu()
 #endif
     if (swap ? controller[CONT_ANY].keyA.press : controller[CONT_ANY].keyB.press) {
         devMenu.state     = DevMenu_OptionsMenu;
-        devMenu.selection = 4;
+        devMenu.selection = 3;
     }
 #endif
 }

@@ -42,8 +42,8 @@ void RSDK::Legacy::v4::ProcessStage(void)
             videoSettings.dimLimit       = (5 * 60) * videoSettings.refreshRate;
             fadeMode                     = 0;
             InitCameras();
-            cameraShift       = 0;
-            cameraLockedY     = 0;
+            currentCamera->cameraShift       = 0;
+            currentCamera->cameraLockedY     = 0;
             xScrollOffset     = 0;
             yScrollOffset     = 0;
             cameraShakeX      = 0;
@@ -1021,9 +1021,9 @@ void RSDK::Legacy::v4::SetPlayerScreenPosition(Entity *target)
             else
                 yPosDif = 0;
         }
-        cameraLockedY = false;
+        currentCamera->cameraLockedY = false;
     }
-    else if (cameraLockedY) {
+    else if (currentCamera->cameraLockedY) {
         yPosDif             = 0;
         currentCamera->ypos = targetY;
     }
@@ -1041,26 +1041,26 @@ void RSDK::Legacy::v4::SetPlayerScreenPosition(Entity *target)
         }
         else {
             yPosDif       = 0;
-            cameraLockedY = true;
+            currentCamera->cameraLockedY = true;
         }
     }
     else {
         yPosDif = targetY - currentCamera->ypos;
         if (targetY - currentCamera->ypos < 0) {
             yPosDif       = 0;
-            cameraLockedY = true;
+            currentCamera->cameraLockedY = true;
         }
         else if (yPosDif > 32 || abs(target->yvel) > 0x60000) {
             if (yPosDif > 16) {
                 yPosDif = 16;
             }
             else {
-                cameraLockedY = true;
+                currentCamera->cameraLockedY = true;
             }
         }
         else {
             if (yPosDif <= 6) {
-                cameraLockedY = true;
+                currentCamera->cameraLockedY = true;
             }
             else {
                 yPosDif = 6;
@@ -1197,13 +1197,13 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
     if (!target->gravity) {
         if (target->direction) {
             if (currentCamera->style == CAMERASTYLE_EXTENDED_OFFSET_R || target->speed < -0x5F5C2) {
-                cameraShift = 2;
+                currentCamera->cameraShift = 2;
                 if (target->lookPosX <= 63) {
                     target->lookPosX += 2;
                 }
             }
             else {
-                cameraShift = 0;
+                currentCamera->cameraShift = 0;
                 if (target->lookPosX < 0) {
                     target->lookPosX += 2;
                 }
@@ -1215,13 +1215,13 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
         }
         else {
             if (currentCamera->style == CAMERASTYLE_EXTENDED_OFFSET_L || target->speed > 0x5F5C2) {
-                cameraShift = 1;
+                currentCamera->cameraShift = 1;
                 if (target->lookPosX >= -63) {
                     target->lookPosX -= 2;
                 }
             }
             else {
-                cameraShift = 0;
+                currentCamera->cameraShift = 0;
                 if (target->lookPosX < 0) {
                     target->lookPosX += 2;
                 }
@@ -1233,12 +1233,12 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
         }
     }
     else {
-        if (cameraShift == 1) {
+        if (currentCamera->cameraShift == 1) {
             if (target->lookPosX >= -63) {
                 target->lookPosX -= 2;
             }
         }
-        else if (cameraShift < 1) {
+        else if (currentCamera->cameraShift < 1) {
             if (target->lookPosX < 0) {
                 target->lookPosX += 2;
             }
@@ -1246,7 +1246,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                 target->lookPosX -= 2;
             }
         }
-        else if (cameraShift == 2) {
+        else if (currentCamera->cameraShift == 2) {
             if (target->lookPosX <= 63) {
                 target->lookPosX += 2;
             }
@@ -1255,7 +1255,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
     currentCamera->xpos = targetX - target->lookPosX;
 
     if (!target->scrollTracking) {
-        if (cameraLockedY) {
+        if (currentCamera->cameraLockedY) {
             currentCamera->ypos = targetY;
             if (currentCamera->ypos < curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                 currentCamera->ypos = curYBoundary1 + LEGACY_SCREEN_SCROLL_UP;
@@ -1264,7 +1264,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
         else if (targetY > currentCamera->ypos) {
             int32 dif = targetY - currentCamera->ypos;
             if (targetY - currentCamera->ypos < 0) {
-                cameraLockedY = true;
+                currentCamera->cameraLockedY = true;
                 if (currentCamera->ypos < curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                     currentCamera->ypos = curYBoundary1 + LEGACY_SCREEN_SCROLL_UP;
                 }
@@ -1281,7 +1281,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                         }
                     }
                     else {
-                        cameraLockedY = true;
+                        currentCamera->cameraLockedY = true;
                         if (currentCamera->ypos + dif >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                             currentCamera->ypos += dif;
                         }
@@ -1300,7 +1300,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                     }
                 }
                 else {
-                    cameraLockedY = true;
+                    currentCamera->cameraLockedY = true;
                     if (currentCamera->ypos + dif >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                         currentCamera->ypos += dif;
                     }
@@ -1324,7 +1324,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                         }
                     }
                     else {
-                        cameraLockedY = true;
+                        currentCamera->cameraLockedY = true;
                         if (currentCamera->ypos + dif >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                             currentCamera->ypos += dif;
                         }
@@ -1346,7 +1346,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
             else {
                 dif = 0;
                 if (abs(target->yvel) > 0x60000) {
-                    cameraLockedY = true;
+                    currentCamera->cameraLockedY = true;
                     if (currentCamera->ypos + dif >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                         currentCamera->ypos += dif;
                     }
@@ -1355,7 +1355,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                     }
                 }
                 else {
-                    cameraLockedY = true;
+                    currentCamera->cameraLockedY = true;
                     if (currentCamera->ypos + dif >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                         currentCamera->ypos += dif;
                     }
@@ -1375,7 +1375,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                 if (difY >= 17)
                     difY = 16;
 
-                cameraLockedY = false;
+                currentCamera->cameraLockedY = false;
                 if (currentCamera->ypos + difY >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                     currentCamera->ypos += difY;
                 }
@@ -1384,7 +1384,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                 }
             }
             else {
-                cameraLockedY = false;
+                currentCamera->cameraLockedY = false;
                 if (currentCamera->ypos < curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                     currentCamera->ypos = curYBoundary1 + LEGACY_SCREEN_SCROLL_UP;
                 }
@@ -1395,7 +1395,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
             if (difY > 0) {
                 difY = 0;
 
-                cameraLockedY = false;
+                currentCamera->cameraLockedY = false;
                 if (currentCamera->ypos < curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                     currentCamera->ypos = curYBoundary1 + LEGACY_SCREEN_SCROLL_UP;
                 }
@@ -1403,7 +1403,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
             else if (difY <= -17) {
                 difY = -16;
 
-                cameraLockedY = false;
+                currentCamera->cameraLockedY = false;
                 if (currentCamera->ypos + difY >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                     currentCamera->ypos += difY;
                 }
@@ -1412,7 +1412,7 @@ void RSDK::Legacy::v4::SetPlayerScreenPositionCDStyle(Entity *target)
                 }
             }
             else {
-                cameraLockedY = false;
+                currentCamera->cameraLockedY = false;
                 if (currentCamera->ypos + difY >= curYBoundary1 + LEGACY_SCREEN_SCROLL_UP) {
                     currentCamera->ypos += difY;
                 }
@@ -1571,9 +1571,9 @@ void RSDK::Legacy::v4::SetPlayerHLockedScreenPosition(Entity *target)
             else
                 camScroll = 0;
         }
-        cameraLockedY = false;
+        currentCamera->cameraLockedY = false;
     }
-    else if (cameraLockedY) {
+    else if (currentCamera->cameraLockedY) {
         camScroll           = 0;
         currentCamera->ypos = targetY;
     }
@@ -1585,38 +1585,38 @@ void RSDK::Legacy::v4::SetPlayerHLockedScreenPosition(Entity *target)
                     camScroll = 16;
                 }
                 else {
-                    cameraLockedY = true;
+                    currentCamera->cameraLockedY = true;
                 }
             }
             else if (camScroll > 6) {
                 camScroll = 6;
             }
             else {
-                cameraLockedY = true;
+                currentCamera->cameraLockedY = true;
             }
         }
         else {
             camScroll     = 0;
-            cameraLockedY = true;
+            currentCamera->cameraLockedY = true;
         }
     }
     else {
         camScroll = targetY - currentCamera->ypos;
         if (camScroll > 0) {
             camScroll     = 0;
-            cameraLockedY = true;
+            currentCamera->cameraLockedY = true;
         }
         else if (camScroll < -32 || abs(target->yvel) > 0x60000) {
             if (camScroll < -16) {
                 camScroll = -16;
             }
             else {
-                cameraLockedY = true;
+                currentCamera->cameraLockedY = true;
             }
         }
         else {
             if (camScroll >= -6)
-                cameraLockedY = true;
+                currentCamera->cameraLockedY = true;
             else
                 camScroll = -6;
         }

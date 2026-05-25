@@ -137,10 +137,10 @@ void SetIdentityMatrix(Matrix *matrix);
 void MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB);
 void MatrixTranslateXYZ(Matrix *Matrix, int32 x, int32 y, int32 z, bool32 setIdentity);
 void MatrixScaleXYZ(Matrix *matrix, int32 scaleX, int32 scaleY, int32 scaleZ);
-void MatrixRotateX(Matrix *matrix, int16 angle);
-void MatrixRotateY(Matrix *matrix, int16 angle);
-void MatrixRotateZ(Matrix *matrix, int16 angle);
-void MatrixRotateXYZ(Matrix *matrix, int16 rotationX, int16 rotationY, int16 rotationZ);
+void MatrixRotateX(Matrix *matrix, int32 angle);
+void MatrixRotateY(Matrix *matrix, int32 angle);
+void MatrixRotateZ(Matrix *matrix, int32 angle);
+void MatrixRotateXYZ(Matrix *matrix, int32 rotationX, int32 rotationY, int32 rotationZ);
 void MatrixInverse(Matrix *dest, Matrix *matrix);
 inline void MatrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
 

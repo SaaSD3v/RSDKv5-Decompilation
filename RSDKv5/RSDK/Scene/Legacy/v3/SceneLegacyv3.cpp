@@ -962,21 +962,21 @@ void RSDK::Legacy::v3::SetPlayerScreenPositionCDStyle(Player *player)
     if (!player->gravity) {
         if (player->boundEntity->direction) {
             if (currentCamera->style == CAMERASTYLE_EXTENDED_OFFSET_R || player->speed < -0x5F5C2)
-                cameraLagStyle = 2;
+                currentCamera->cameraShift = 2;
             else
-                cameraLagStyle = 0;
+                currentCamera->cameraShift = 0;
         }
         else {
-            cameraLagStyle = (currentCamera->style == CAMERASTYLE_EXTENDED_OFFSET_L || player->speed > 0x5F5C2) != 0;
+            currentCamera->cameraShift = (currentCamera->style == CAMERASTYLE_EXTENDED_OFFSET_L || player->speed > 0x5F5C2) != 0;
         }
     }
 
-    if (cameraLagStyle) {
-        if (cameraLagStyle == 1) {
+    if (currentCamera->cameraShift) {
+        if (currentCamera->cameraShift == 1) {
             if (cameraLag > -64)
                 cameraLag -= 2;
         }
-        else if (cameraLagStyle == 2 && cameraLag < 64) {
+        else if (currentCamera->cameraShift == 2 && cameraLag < 64) {
             cameraLag += 2;
         }
     }

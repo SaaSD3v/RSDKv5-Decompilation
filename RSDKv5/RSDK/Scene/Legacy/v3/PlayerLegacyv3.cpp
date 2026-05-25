@@ -35,24 +35,6 @@ void RSDK::Legacy::v3::ProcessPlayerControl(Player *player)
             player->jumpHold  = controller[CONT_P1].keyA.down || controller[CONT_P1].keyB.down || controller[CONT_P1].keyC.down;
             player->jumpPress = controller[CONT_P1].keyA.press || controller[CONT_P1].keyB.press || controller[CONT_P1].keyC.press;
 
-            upBuffer <<= 1;
-            upBuffer |= (uint8)player->up;
-
-            downBuffer <<= 1;
-            downBuffer |= (uint8)player->down;
-
-            leftBuffer <<= 1;
-            leftBuffer |= (uint8)player->left;
-
-            rightBuffer <<= 1;
-            rightBuffer |= (uint8)player->right;
-
-            jumpPressBuffer <<= 1;
-            jumpPressBuffer |= (uint8)player->jumpPress;
-
-            jumpHoldBuffer <<= 1;
-            jumpHoldBuffer |= (uint8)player->jumpHold;
-
             if (activePlayerCount >= 2 && !player->followPlayer1) {
                 upBuffer <<= 1;
                 upBuffer |= (uint8)player->up;
@@ -72,10 +54,12 @@ void RSDK::Legacy::v3::ProcessPlayerControl(Player *player)
                 jumpHoldBuffer <<= 1;
                 jumpHoldBuffer |= (uint8)player->jumpHold;
 
+                nextLeaderPosID                        = (nextLeaderPosID + 1) & 0xF;
+
                 leaderPositionBufferX[nextLeaderPosID] = player->XPos >> 16;
                 leaderPositionBufferY[nextLeaderPosID] = player->YPos >> 16;
-                nextLeaderPosID                        = (nextLeaderPosID + 1) & 0xF;
-                lastLeaderPosID                        = (nextLeaderPosID + 1) & 0xF;
+    
+                lastLeaderPosID                        = (lastLeaderPosID + 1) & 0xF;
             }
             break;
 
@@ -98,11 +82,13 @@ void RSDK::Legacy::v3::ProcessPlayerControl(Player *player)
 
                 jumpHoldBuffer <<= 1;
                 jumpHoldBuffer |= (uint8)player->jumpHold;
+                
+                nextLeaderPosID                        = (nextLeaderPosID + 1) & 0xF;
 
                 leaderPositionBufferX[nextLeaderPosID] = player->XPos >> 16;
                 leaderPositionBufferY[nextLeaderPosID] = player->YPos >> 16;
-                nextLeaderPosID                        = (nextLeaderPosID + 1) & 0xF;
-                lastLeaderPosID                        = (nextLeaderPosID + 1) & 0xF;
+    
+                lastLeaderPosID                        = (lastLeaderPosID + 1) & 0xF;
             }
             break;
 

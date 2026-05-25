@@ -506,7 +506,7 @@ int32 RSDK::PlaySfx(uint16 sfx, uint32 loopPoint, uint32 priority)
     return slot;
 }
 
-void RSDK::SetChannelAttributes(uint8 channel, float volume, float panning, float speed)
+void RSDK::SetChannelAttributes(int32 channel, float volume, float panning, float speed)
 {
     if (channel < CHANNEL_COUNT) {
         volume                   = fminf(4.0f, volume);
@@ -524,7 +524,7 @@ void RSDK::SetChannelAttributes(uint8 channel, float volume, float panning, floa
     }
 }
 
-uint32 RSDK::GetChannelPos(uint32 channel)
+uint32 RSDK::GetChannelPos(int32 channel)
 {
     if (channel >= CHANNEL_COUNT)
         return 0;

@@ -1107,7 +1107,43 @@ void RSDK::ProcessParallax(TileLayer *layer)
             }
             break;
         }
+#if RETRO_REV0U
+        case LAYER_VSCROLL: {
+            for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
+                scrollInfo->tilePos = scrollInfo->scrollPos + ((currentScreen->position.y * scrollInfo->parallaxFactor) << 8);
+                scrollInfo->tilePos = TO_FIXED(FROM_FIXED(scrollInfo->tilePos) % pixelHeight);
 
+                ++scrollInfo;
+            }
+
+            uint16 scrollPos =
+                FROM_FIXED((int32)((layer->scrollPos + (layer->parallaxFactor * currentScreen->position.x << 8)) & 0xFFFF0000)) % pixelWidth;
+ 
+            uint8 *lineScrollPtr = &layer->lineScroll[scrollPos];
+
+            // Above water
+            int32 *deformationData = &layer->deformationData[(scrollPos + layer->deformationOffset) & 0x1FF];
+            for (int32 i = 0; i < currentScreen->size.x; ++i) {
+                scanline->position.y = layer->scrollInfo[*lineScrollPtr].tilePos;
+                if (layer->scrollInfo[*lineScrollPtr].deform)
+                    scanline->position.y += TO_FIXED(*deformationData);
+
+                scanline->position.x = TO_FIXED(scrollPos++);
+
+                deformationData++;
+                if (scrollPos == pixelWidth) {
+                    lineScrollPtr = layer->lineScroll;
+                    scrollPos     = 0;
+                }
+                else {
+                    ++lineScrollPtr;
+                }
+
+                scanline++;
+            }
+            break;
+        }
+#else
         case LAYER_VSCROLL: {
             for (int32 i = 0; i < layer->scrollInfoCount; ++i) {
                 scrollInfo->tilePos = scrollInfo->scrollPos + (currentScreen->position.y * scrollInfo->parallaxFactor << 8);
@@ -1140,6 +1176,7 @@ void RSDK::ProcessParallax(TileLayer *layer)
             }
             break;
         }
+#endif
 
         case LAYER_ROTOZOOM: {
             int16 scrollPosX =
@@ -1489,7 +1526,11 @@ void RSDK::DrawLayerVScroll(TileLayer *layer)
 
         ty = y >> 20;
         for (int32 l = 0; l < lineTileCount; ++l) {
+#if RETRO_REV0U
+            layout += 1 << layer->widthShift;
+#else
             layout += layer->xsize;
+#endif
 
             if (++ty == layer->ysize) {
                 ty = 0;
@@ -1557,7 +1598,11 @@ void RSDK::DrawLayerVScroll(TileLayer *layer)
         }
 
         while (lineRemain > 0) {
+#if RETRO_REV0U
+            layout += 1 << layer->widthShift;
+#else
             layout += layer->xsize;
+#endif
 
             if (++ty == layer->ysize) {
                 ty = 0;
