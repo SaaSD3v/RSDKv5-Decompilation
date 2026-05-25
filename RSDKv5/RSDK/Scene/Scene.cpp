@@ -210,6 +210,11 @@ void RSDK::LoadSceneFolder()
             if (objClass->staticVars && !*objClass->staticVars) {
                 AllocateStorage((void **)objClass->staticVars, objClass->staticClassSize, DATASET_STG, true);
 
+#if RETRO_USE_MOD_LOADER && RETRO_REV0U
+                // Assign classID early so that SUPER_STATICLOAD works correctly
+                (*objClass->staticVars)->classID = o;
+#endif
+
 #if RETRO_REV0U
                 if (objClass->staticLoad)
                     objClass->staticLoad(*objClass->staticVars);
