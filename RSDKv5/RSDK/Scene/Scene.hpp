@@ -37,6 +37,7 @@ struct SceneListEntry {
     char id[0x04];
 #if RETRO_REV02
     uint8 filter;
+    uint8 padding[3];
 #endif
 };
 
@@ -144,6 +145,7 @@ struct TileInfo {
     uint8 rWallAngle;
     uint8 roofAngle;
     uint8 flag;
+    uint8 padding[3];
 };
 
 extern ScanlineInfo *scanlines;
