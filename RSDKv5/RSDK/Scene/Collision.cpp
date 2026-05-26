@@ -30,8 +30,8 @@ CollisionSensor RSDK::sensors[6];
 #if RETRO_REV0U
 int32 RSDK::collisionMinimumDistance = TO_FIXED(24);
 
-uint8 RSDK::lowCollisionTolerance  = 8;
-uint8 RSDK::highCollisionTolerance = 14;
+int32 RSDK::lowCollisionTolerance  = 8;
+int32 RSDK::highCollisionTolerance = 14;
 
 uint8 RSDK::floorAngleTolerance = 0x20;
 uint8 RSDK::wallAngleTolerance  = 0x20;

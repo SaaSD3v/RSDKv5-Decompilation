@@ -64,22 +64,22 @@ extern CollisionSensor sensors[6];
 #if RETRO_REV0U
 extern int32 collisionMinimumDistance;
 
-extern uint8 lowCollisionTolerance;
-extern uint8 highCollisionTolerance;
+extern int32 lowCollisionTolerance;
+extern int32 highCollisionTolerance;
 
 extern uint8 floorAngleTolerance;
 extern uint8 wallAngleTolerance;
 extern uint8 roofAngleTolerance;
 
-inline void SetupCollisionConfig(int8 minDistance, uint8 lowTolerance, uint8 highTolerance, uint8 floorAngleTolerance, uint8 wallAngleTolerance,
+inline void SetupCollisionConfig(uint8 minDistance, uint8 lowTolerance, uint8 highTolerance, uint8 floorAngleTolerance, uint8 wallAngleTolerance,
                                  uint8 roofAngleTolerance)
 {
-    collisionMinimumDistance = TO_FIXED(minDistance);
-    lowCollisionTolerance    = lowTolerance; 
-    highCollisionTolerance   = highTolerance;
-    RSDK::floorAngleTolerance    = floorAngleTolerance;
-    RSDK::wallAngleTolerance     = wallAngleTolerance;
-    RSDK::roofAngleTolerance     = roofAngleTolerance;
+    RSDK::collisionMinimumDistance = TO_FIXED(minDistance);
+    RSDK::lowCollisionTolerance    = lowTolerance;
+    RSDK::highCollisionTolerance   = highTolerance;
+    RSDK::floorAngleTolerance      = floorAngleTolerance;
+    RSDK::wallAngleTolerance       = wallAngleTolerance;
+    RSDK::roofAngleTolerance       = roofAngleTolerance;
 }
 #endif
 
