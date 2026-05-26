@@ -328,7 +328,7 @@ void RSDK::SetupFunctionTables()
     ADD_RSDK_FUNCTION(FunctionTable_MatrixRotateZ, MatrixRotateZ);
     ADD_RSDK_FUNCTION(FunctionTable_MatrixRotateXYZ, MatrixRotateXYZ);
     ADD_RSDK_FUNCTION(FunctionTable_MatrixInverse, MatrixInverse);
-    ADD_RSDK_FUNCTION(FunctionTable_MatrixCopy, MatrixCopy);
+    ADD_RSDK_FUNCTION(FunctionTable_MatrixTranspose, MatrixTranspose);
 
     // Strings
     ADD_RSDK_FUNCTION(FunctionTable_InitString, InitString);

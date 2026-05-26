@@ -376,6 +376,26 @@ void RSDK::MatrixInverse(Matrix *dest, Matrix *matrix)
     for (int32 i = 0; i < 0x10; ++i) dest->values[i / 4][i % 4] = (int32)inv[i];
 }
 
+void RSDK::MatrixTranspose(Matrix *matDst, Matrix *matSrc)
+{
+    matDst->values[0][0] = matSrc->values[0][0];
+    matDst->values[1][0] = matSrc->values[0][1];
+    matDst->values[2][0] = matSrc->values[0][2];
+    matDst->values[3][0] = matSrc->values[0][3];
+    matDst->values[0][1] = matSrc->values[1][0];
+    matDst->values[1][1] = matSrc->values[1][1];
+    matDst->values[2][1] = matSrc->values[1][2];
+    matDst->values[3][1] = matSrc->values[1][3];
+    matDst->values[0][2] = matSrc->values[2][0];
+    matDst->values[1][2] = matSrc->values[2][1];
+    matDst->values[2][2] = matSrc->values[2][2];
+    matDst->values[3][2] = matSrc->values[2][3];
+    matDst->values[0][3] = matSrc->values[3][0];
+    matDst->values[1][3] = matSrc->values[3][1];
+    matDst->values[2][3] = matSrc->values[3][2];
+    matDst->values[3][3] = matSrc->values[3][3];
+}
+
 uint16 RSDK::LoadMesh(const char *filename, uint8 scope)
 {
     if (!scope || scope > SCOPE_STAGE)

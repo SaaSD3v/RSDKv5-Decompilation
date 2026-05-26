@@ -160,7 +160,7 @@ enum FunctionTableIDs {
     FunctionTable_MatrixRotateZ,
     FunctionTable_MatrixRotateXYZ,
     FunctionTable_MatrixInverse,
-    FunctionTable_MatrixCopy,
+    FunctionTable_MatrixTranspose,
     FunctionTable_InitString,
     FunctionTable_CopyString,
     FunctionTable_SetString,

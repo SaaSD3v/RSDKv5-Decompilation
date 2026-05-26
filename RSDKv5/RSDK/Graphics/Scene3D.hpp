@@ -142,7 +142,7 @@ void MatrixRotateY(Matrix *matrix, int32 angle);
 void MatrixRotateZ(Matrix *matrix, int32 angle);
 void MatrixRotateXYZ(Matrix *matrix, int32 rotationX, int32 rotationY, int32 rotationZ);
 void MatrixInverse(Matrix *dest, Matrix *matrix);
-inline void MatrixCopy(Matrix *matDst, Matrix *matSrc) { memcpy(matDst, matSrc, sizeof(Matrix)); }
+void MatrixTranspose(Matrix *matDst, Matrix *matSrc);
 
 uint16 LoadMesh(const char *filepath, uint8 scope);
 uint16 Create3DScene(const char *name, uint16 faceCnt, uint8 scope);
