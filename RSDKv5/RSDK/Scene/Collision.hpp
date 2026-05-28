@@ -138,32 +138,7 @@ inline void GetCollisionInfo(CollisionMask **masks, TileInfo **tiles)
 #endif
 
 bool32 CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox);
-inline bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, Entity *otherEntity, int32 otherRadius)
-{
-    int32 x = FROM_FIXED(thisEntity->position.x - otherEntity->position.x);
-    int32 y = FROM_FIXED(thisEntity->position.y - otherEntity->position.y);
-    int32 r = FROM_FIXED(thisRadius + otherRadius);
-
-#if !RETRO_USE_ORIGINAL_CODE
-    if (showHitboxes) {
-        bool32 collided = x * x + y * y < r * r;
-        Hitbox thisHitbox;
-        Hitbox otherHitbox;
-        thisHitbox.left  = thisRadius >> 16;
-        otherHitbox.left = otherRadius >> 16;
-
-        int32 thisHitboxID  = AddDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, thisEntity, &thisHitbox);
-        int32 otherHitboxID = AddDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, otherEntity, &otherHitbox);
-
-        if (thisHitboxID >= 0 && collided)
-            debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
-        if (otherHitboxID >= 0 && collided)
-            debugHitboxList[otherHitboxID].collision |= 1 << (collided - 1);
-    }
-#endif
-
-    return x * x + y * y < r * r;
-}
+bool32 CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, Entity *otherEntity, int32 otherRadius);
 uint8 CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues);
 bool32 CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues);
 

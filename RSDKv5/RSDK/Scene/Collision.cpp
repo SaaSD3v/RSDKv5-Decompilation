@@ -276,6 +276,33 @@ bool32 RSDK::CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, E
     return collided;
 }
 
+bool32 RSDK::CheckObjectCollisionCircle(Entity *thisEntity, int32 thisRadius, Entity *otherEntity, int32 otherRadius)
+{
+    int32 x = FROM_FIXED(thisEntity->position.x - otherEntity->position.x);
+    int32 y = FROM_FIXED(thisEntity->position.y - otherEntity->position.y);
+    int32 r = FROM_FIXED(thisRadius + otherRadius);
+
+#if !RETRO_USE_ORIGINAL_CODE
+    if (showHitboxes) {
+        bool32 collided = x * x + y * y < r * r;
+        Hitbox thisHitbox;
+        Hitbox otherHitbox;
+        thisHitbox.left  = thisRadius >> 16;
+        otherHitbox.left = otherRadius >> 16;
+
+        int32 thisHitboxID  = AddDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, thisEntity, &thisHitbox);
+        int32 otherHitboxID = AddDebugHitbox(H_TYPE_CIRCLE, FLIP_NONE, otherEntity, &otherHitbox);
+
+        if (thisHitboxID >= 0 && collided)
+            debugHitboxList[thisHitboxID].collision |= 1 << (collided - 1);
+        if (otherHitboxID >= 0 && collided)
+            debugHitboxList[otherHitboxID].collision |= 1 << (collided - 1);
+    }
+#endif
+
+    return x * x + y * y < r * r;
+}
+
 uint8 RSDK::CheckObjectCollisionBox(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox, bool32 setValues)
 {
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
