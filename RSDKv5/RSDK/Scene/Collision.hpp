@@ -81,6 +81,47 @@ inline void SetupCollisionConfig(uint8 minDistance, uint8 lowTolerance, uint8 hi
     RSDK::wallAngleTolerance       = wallAngleTolerance;
     RSDK::roofAngleTolerance       = roofAngleTolerance;
 }
+
+// Like Hitbox, but as fixed point values
+struct HitboxFP {
+    int32 left;
+    int32 top;
+    int32 right;
+    int32 bottom;
+};
+
+inline void GetOrientedHitboxFP(HitboxFP *hitboxDst, Entity *entity, Hitbox *hitbox)
+{
+    switch (entity->direction) {
+        case FLIP_NONE:
+            hitboxDst->left   = TO_FIXED(hitbox->left);
+            hitboxDst->top    = TO_FIXED(hitbox->top);
+            hitboxDst->right  = TO_FIXED(hitbox->right);
+            hitboxDst->bottom = TO_FIXED(hitbox->bottom);
+            break;
+
+        case FLIP_X:
+            hitboxDst->left   = -TO_FIXED(hitbox->right);
+            hitboxDst->top    =  TO_FIXED(hitbox->top);
+            hitboxDst->right  = -TO_FIXED(hitbox->left);
+            hitboxDst->bottom =  TO_FIXED(hitbox->bottom);
+            break;
+
+        case FLIP_Y:
+            hitboxDst->left   =  TO_FIXED(hitbox->left);
+            hitboxDst->top    = -TO_FIXED(hitbox->bottom);
+            hitboxDst->right  =  TO_FIXED(hitbox->right);
+            hitboxDst->bottom = -TO_FIXED(hitbox->top);
+            break;
+
+        case FLIP_XY:
+            hitboxDst->left   = -TO_FIXED(hitbox->right);
+            hitboxDst->top    = -TO_FIXED(hitbox->bottom);
+            hitboxDst->right  = -TO_FIXED(hitbox->left);
+            hitboxDst->bottom = -TO_FIXED(hitbox->top);
+            break;
+    }
+}
 #endif
 
 #if RETRO_REV0U || RETRO_USE_MOD_LOADER

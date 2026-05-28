@@ -196,30 +196,57 @@ void RSDK::CopyCollisionMask(uint16 dst, uint16 src, uint8 cPlane, uint8 cMode)
 }
 #endif
 
+// Edits hitbox in-place based on entity->direction's flip values
+#define FlipHitbox(entity, hitbox)                      \
+{                                                       \
+    int16 store;                                        \
+    switch (entity->direction) {                        \
+        case FLIP_X:                                    \
+            store         = -hitbox->left;              \
+            hitbox->left  = -hitbox->right;             \
+            hitbox->right =  store;                     \
+            break;                                      \
+                                                        \
+        case FLIP_Y:                                    \
+            store          = -hitbox->top;              \
+            hitbox->top    = -hitbox->bottom;           \
+            hitbox->bottom =  store;                    \
+            break;                                      \
+                                                        \
+        case FLIP_XY:                                   \
+            store          = -hitbox->left;             \
+            hitbox->left   = -hitbox->right;            \
+            hitbox->right  =  store;                    \
+            store          = -hitbox->top;              \
+            hitbox->top    = -hitbox->bottom;           \
+            hitbox->bottom =  store;                    \
+            break;                                      \
+    }                                                   \
+}
+
 bool32 RSDK::CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, Entity *otherEntity, Hitbox *otherHitbox)
 {
-    int32 store = 0;
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
         return false;
 
-    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
-        store             = -thisHitbox->left;
-        thisHitbox->left  = -thisHitbox->right;
-        thisHitbox->right = store;
+#if RETRO_REV0U
+    HitboxFP thisHitboxFP;
+    HitboxFP otherHitboxFP;
 
-        store              = -otherHitbox->left;
-        otherHitbox->left  = -otherHitbox->right;
-        otherHitbox->right = store;
-    }
-    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
-        store              = -thisHitbox->top;
-        thisHitbox->top    = -thisHitbox->bottom;
-        thisHitbox->bottom = store;
+    GetOrientedHitboxFP(&thisHitboxFP, thisEntity, thisHitbox);
+    GetOrientedHitboxFP(&otherHitboxFP, otherEntity, otherHitbox);
 
-        store               = -otherHitbox->top;
-        otherHitbox->top    = -otherHitbox->bottom;
-        otherHitbox->bottom = store;
-    }
+    int32 thisX  = thisEntity->position.x;
+    int32 thisY  = thisEntity->position.y;
+    int32 otherX = otherEntity->position.x;
+    int32 otherY = otherEntity->position.y;
+
+    bool32 collided = thisX + thisHitboxFP.left < otherX + otherHitboxFP.right && thisX + thisHitboxFP.right > otherX + otherHitboxFP.left
+                      && thisY + thisHitboxFP.top < otherY + otherHitboxFP.bottom && thisY + thisHitboxFP.bottom > otherY + otherHitboxFP.top;
+#else
+    // Bug details: v5 uses the first entity's direction to determine both hitboxes' orientation's flip values
+    FlipHitbox(thisEntity, thisHitbox);
+    FlipHitbox(thisEntity, otherHitbox);
 
     int32 thisIX  = FROM_FIXED(thisEntity->position.x);
     int32 thisIY  = FROM_FIXED(thisEntity->position.y);
@@ -229,24 +256,10 @@ bool32 RSDK::CheckObjectCollisionTouch(Entity *thisEntity, Hitbox *thisHitbox, E
     bool32 collided = thisIX + thisHitbox->left < otherIX + otherHitbox->right && thisIX + thisHitbox->right > otherIX + otherHitbox->left
                       && thisIY + thisHitbox->top < otherIY + otherHitbox->bottom && thisIY + thisHitbox->bottom > otherIY + otherHitbox->top;
 
-    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
-        store             = -thisHitbox->left;
-        thisHitbox->left  = -thisHitbox->right;
-        thisHitbox->right = store;
-
-        store              = -otherHitbox->left;
-        otherHitbox->left  = -otherHitbox->right;
-        otherHitbox->right = store;
-    }
-    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
-        store              = -thisHitbox->top;
-        thisHitbox->top    = -thisHitbox->bottom;
-        thisHitbox->bottom = store;
-
-        store               = -otherHitbox->top;
-        otherHitbox->top    = -otherHitbox->bottom;
-        otherHitbox->bottom = store;
-    }
+    // Flip them again to restore their original values
+    FlipHitbox(thisEntity, thisHitbox);
+    FlipHitbox(thisEntity, otherHitbox);
+#endif
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
