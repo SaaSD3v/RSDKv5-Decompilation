@@ -596,31 +596,14 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
     if (!thisEntity || !otherEntity || !thisHitbox || !otherHitbox)
         return false;
 
-    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
-        store             = -thisHitbox->left;
-        thisHitbox->left  = -thisHitbox->right;
-        thisHitbox->right = store;
 #if RETRO_REV0U
-    }
-    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
+    FlipHitbox(thisEntity, thisHitbox);
+    FlipHitbox(otherEntity, otherHitbox);
+#else
+    // Bug details: v5 uses the first entity's direction to determine both hitboxes' orientation's flip values
+    FlipHitbox(thisEntity, thisHitbox);
+    FlipHitbox(thisEntity, otherHitbox);
 #endif
-        store              = -otherHitbox->left;
-        otherHitbox->left  = -otherHitbox->right;
-        otherHitbox->right = store;
-    }
-
-    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
-        store              = -thisHitbox->top;
-        thisHitbox->top    = -thisHitbox->bottom;
-        thisHitbox->bottom = store;
-#if RETRO_REV0U
-    }
-    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
-#endif
-        store               = -otherHitbox->top;
-        otherHitbox->top    = -otherHitbox->bottom;
-        otherHitbox->bottom = store;
-    }
 
     int32 thisIX  = FROM_FIXED(thisEntity->position.x);
     int32 thisIY  = FROM_FIXED(thisEntity->position.y);
@@ -630,14 +613,14 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
     int32 otherMoveY = FROM_FIXED(otherEntity->position.y - otherEntity->velocity.y);
 
 #if RETRO_REV0U
-    if (otherEntity->tileCollisions != TILECOLLISION_DOWN) {	
-        if (otherMoveY - otherHitbox->bottom >= thisIY + -thisHitbox->bottom
-            && otherIY - otherHitbox->bottom <= thisIY + -thisHitbox->top
+    if (otherEntity->tileCollisions != TILECOLLISION_DOWN) {
+        if (otherMoveY - otherHitbox->bottom >= thisIY - thisHitbox->bottom
+            && otherIY - otherHitbox->bottom <= thisIY - thisHitbox->top
             && thisIX + thisHitbox->left < otherIX + otherHitbox->right
             && thisIX + thisHitbox->right > otherIX + otherHitbox->left
             && otherEntity->velocity.y <= 0) {
 
-            otherEntity->position.y = thisEntity->position.y + TO_FIXED(-thisHitbox->top + otherHitbox->bottom);
+            otherEntity->position.y = thisEntity->position.y + TO_FIXED(otherHitbox->bottom - thisHitbox->top);
 
             if (setValues) {
                 otherEntity->velocity.y = 0;
@@ -676,31 +659,15 @@ bool32 RSDK::CheckObjectCollisionPlatform(Entity *thisEntity, Hitbox *thisHitbox
     }
 #endif
 
-    if ((thisEntity->direction & FLIP_X) == FLIP_X) {
-        store             = -thisHitbox->left;
-        thisHitbox->left  = -thisHitbox->right;
-        thisHitbox->right = store;
-#if RETRO_REV0U
-    }
-    if ((otherEntity->direction & FLIP_X) == FLIP_X) {
-#endif
-        store              = -otherHitbox->left;
-        otherHitbox->left  = -otherHitbox->right;
-        otherHitbox->right = store;
-    }
 
-    if ((thisEntity->direction & FLIP_Y) == FLIP_Y) {
-        store              = -thisHitbox->top;
-        thisHitbox->top    = -thisHitbox->bottom;
-        thisHitbox->bottom = store;
 #if RETRO_REV0U
-    }
-    if ((otherEntity->direction & FLIP_Y) == FLIP_Y) {
+    FlipHitbox(thisEntity, thisHitbox);
+    FlipHitbox(otherEntity, otherHitbox);
+#else
+    // Bug details: v5 uses the first entity's direction to determine both hitboxes' orientation's flip values
+    FlipHitbox(thisEntity, thisHitbox);
+    FlipHitbox(thisEntity, otherHitbox);
 #endif
-        store               = -otherHitbox->top;
-        otherHitbox->top    = -otherHitbox->bottom;
-        otherHitbox->bottom = store;
-    }
 
 #if !RETRO_USE_ORIGINAL_CODE
     if (showHitboxes) {
