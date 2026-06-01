@@ -175,22 +175,45 @@ void RSDK::SetIdentityMatrix(Matrix *matrix)
 }
 void RSDK::MatrixMultiply(Matrix *dest, Matrix *matrixA, Matrix *matrixB)
 {
-    int32 result[4][4];
-    memset(result, 0, 4 * 4 * sizeof(int32));
+    Matrix result;
 
-    for (int32 i = 0; i < 0x10; ++i) {
-        uint32 rowA        = i / 4;
-        uint32 rowB        = i % 4;
-        result[rowB][rowA] = (matrixA->values[3][rowA] * matrixB->values[rowB][3] >> 8) + (matrixA->values[2][rowA] * matrixB->values[rowB][2] >> 8)
-                             + (matrixA->values[1][rowA] * matrixB->values[rowB][1] >> 8)
-                             + (matrixA->values[0][rowA] * matrixB->values[rowB][0] >> 8);
-    }
+    result.values[0][0] = ((matrixA->values[3][0] * matrixB->values[0][3]) >> 8) + ((matrixA->values[2][0] * matrixB->values[0][2]) >> 8)
+                          + ((matrixA->values[1][0] * matrixB->values[0][1]) >> 8) + ((matrixA->values[0][0] * matrixB->values[0][0]) >> 8);
+    result.values[1][0] = ((matrixA->values[3][0] * matrixB->values[1][3]) >> 8) + ((matrixA->values[2][0] * matrixB->values[1][2]) >> 8)
+                          + ((matrixA->values[1][0] * matrixB->values[1][1]) >> 8) + ((matrixA->values[0][0] * matrixB->values[1][0]) >> 8);
+    result.values[2][0] = ((matrixA->values[3][0] * matrixB->values[2][3]) >> 8) + ((matrixA->values[2][0] * matrixB->values[2][2]) >> 8)
+                          + ((matrixA->values[1][0] * matrixB->values[2][1]) >> 8) + ((matrixA->values[0][0] * matrixB->values[2][0]) >> 8);
+    result.values[3][0] = ((matrixA->values[3][0] * matrixB->values[3][3]) >> 8) + ((matrixA->values[2][0] * matrixB->values[3][2]) >> 8)
+                          + ((matrixA->values[1][0] * matrixB->values[3][1]) >> 8) + ((matrixA->values[0][0] * matrixB->values[3][0]) >> 8);
 
-    for (int32 i = 0; i < 0x10; ++i) {
-        uint32 rowA              = i / 4;
-        uint32 rowB              = i % 4;
-        dest->values[rowB][rowA] = result[rowB][rowA];
-    }
+    result.values[0][1] = ((matrixA->values[3][1] * matrixB->values[0][3]) >> 8) + ((matrixA->values[2][1] * matrixB->values[0][2]) >> 8)
+                          + ((matrixA->values[1][1] * matrixB->values[0][1]) >> 8) + ((matrixA->values[0][1] * matrixB->values[0][0]) >> 8);
+    result.values[1][1] = ((matrixA->values[3][1] * matrixB->values[1][3]) >> 8) + ((matrixA->values[2][1] * matrixB->values[1][2]) >> 8)
+                          + ((matrixA->values[1][1] * matrixB->values[1][1]) >> 8) + ((matrixA->values[0][1] * matrixB->values[1][0]) >> 8);
+    result.values[2][1] = ((matrixA->values[3][1] * matrixB->values[2][3]) >> 8) + ((matrixA->values[2][1] * matrixB->values[2][2]) >> 8)
+                          + ((matrixA->values[1][1] * matrixB->values[2][1]) >> 8) + ((matrixA->values[0][1] * matrixB->values[2][0]) >> 8);
+    result.values[3][1] = ((matrixA->values[3][1] * matrixB->values[3][3]) >> 8) + ((matrixA->values[2][1] * matrixB->values[3][2]) >> 8)
+                          + ((matrixA->values[1][1] * matrixB->values[3][1]) >> 8) + ((matrixA->values[0][1] * matrixB->values[3][0]) >> 8);
+
+    result.values[0][2] = ((matrixA->values[3][2] * matrixB->values[0][3]) >> 8) + ((matrixA->values[2][2] * matrixB->values[0][2]) >> 8)
+                          + ((matrixA->values[1][2] * matrixB->values[0][1]) >> 8) + ((matrixA->values[0][2] * matrixB->values[0][0]) >> 8);
+    result.values[1][2] = ((matrixA->values[3][2] * matrixB->values[1][3]) >> 8) + ((matrixA->values[2][2] * matrixB->values[1][2]) >> 8)
+                          + ((matrixA->values[1][2] * matrixB->values[1][1]) >> 8) + ((matrixA->values[0][2] * matrixB->values[1][0]) >> 8);
+    result.values[2][2] = ((matrixA->values[3][2] * matrixB->values[2][3]) >> 8) + ((matrixA->values[2][2] * matrixB->values[2][2]) >> 8)
+                          + ((matrixA->values[1][2] * matrixB->values[2][1]) >> 8) + ((matrixA->values[0][2] * matrixB->values[2][0]) >> 8);
+    result.values[3][2] = ((matrixA->values[3][2] * matrixB->values[3][3]) >> 8) + ((matrixA->values[2][2] * matrixB->values[3][2]) >> 8)
+                          + ((matrixA->values[1][2] * matrixB->values[3][1]) >> 8) + ((matrixA->values[0][2] * matrixB->values[3][0]) >> 8);
+
+    result.values[0][3] = ((matrixA->values[3][3] * matrixB->values[0][3]) >> 8) + ((matrixA->values[2][3] * matrixB->values[0][2]) >> 8)
+                          + ((matrixA->values[1][3] * matrixB->values[0][1]) >> 8) + ((matrixA->values[0][3] * matrixB->values[0][0]) >> 8);
+    result.values[1][3] = ((matrixA->values[3][3] * matrixB->values[1][3]) >> 8) + ((matrixA->values[2][3] * matrixB->values[1][2]) >> 8)
+                          + ((matrixA->values[1][3] * matrixB->values[1][1]) >> 8) + ((matrixA->values[0][3] * matrixB->values[1][0]) >> 8);
+    result.values[2][3] = ((matrixA->values[3][3] * matrixB->values[2][3]) >> 8) + ((matrixA->values[2][3] * matrixB->values[2][2]) >> 8)
+                          + ((matrixA->values[1][3] * matrixB->values[2][1]) >> 8) + ((matrixA->values[0][3] * matrixB->values[2][0]) >> 8);
+    result.values[3][3] = ((matrixA->values[3][3] * matrixB->values[3][3]) >> 8) + ((matrixA->values[2][3] * matrixB->values[3][2]) >> 8)
+                          + ((matrixA->values[1][3] * matrixB->values[3][1]) >> 8) + ((matrixA->values[0][3] * matrixB->values[3][0]) >> 8);
+
+    *dest = result;
 }
 void RSDK::MatrixTranslateXYZ(Matrix *matrix, int32 x, int32 y, int32 z, bool32 setIdentity)
 {
